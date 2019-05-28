@@ -4,6 +4,10 @@ fork of kyubong's [TensorFlow Implementation of DC-TTS](https://github.com/Kyuby
 
 from [Efficiently Trainable Text-to-Speech System Based on Deep Convolutional Networks with Guided Attention](https://arxiv.org/abs/1710.08969).
 
+## Contact
+
+fork maintained by derek@atlaslabs.ai
+
 ## Requirements
   * NumPy >= 1.11.1
   * TensorFlow >= 1.12.0
@@ -16,7 +20,8 @@ from [Efficiently Trainable Text-to-Speech System Based on Deep Convolutional Ne
 
 - data loading for python3 (remove `codecs` and other fixes as seen in issue #11)
 - absolute paths to data (allow preprocessed files to be written to; read from specified absolute path)
-- `argparse` for specifying task number and GPU
+- `argparse` for specifying task number and GPU (`train.py` and `synthesize.py`)
+- allow custom sentences, output directory when generating, and output spectrograms as images
 
 ## (Planned) Experiments
 
@@ -48,8 +53,11 @@ from [Efficiently Trainable Text-to-Speech System Based on Deep Convolutional Ne
 
 ## Synthesis
 
-1. specify sentences to synthesize in `hyperparams.py` (`harvard_sentences.txt` by default)
-2. run `python(3.6) synthesize.py` and check the files in `samples`.
+1. run `python(3.6) synthesize.py`, specifying GPU with `-g`, file with `-f` (format like harvard_sentences.txt), output dir with `-o`
+
+the *default* file and output are specified in `hyperparams.py`
+
+the spectrograms are also written as images
 
 ## (from Kyubong master) Notes
 
