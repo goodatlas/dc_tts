@@ -144,7 +144,9 @@ if __name__ == '__main__':
     if args.gpu >= 0:
         print("restricting GPU usage to gpu/", args.gpu, "\n")
         os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
-
+    else:
+        print("restricting to CPU\n")
+        os.environ["CUDA_VISIBLE_DEVICES"] = '-1'
     g = Graph(num=args.num)
     print("Training Graph loaded")
 
