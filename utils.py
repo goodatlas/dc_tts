@@ -74,7 +74,7 @@ def spectrogram2wav(mag):
     # transpose
     mag = mag.T
 
-    # de-noramlize
+    # de-normalize
     mag = (np.clip(mag, 0, 1) * hp.max_db) - hp.max_db + hp.ref_db
 
     # to amplitude
@@ -90,6 +90,21 @@ def spectrogram2wav(mag):
     wav, _ = librosa.effects.trim(wav)
 
     return wav.astype(np.float32)
+
+def render_spectrogram(wavfile, outname, outfile):
+    y, sr = librosa.load(wavfile)
+    S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128, fmax=8000)
+    plt.figure(figsize=(10, 4))
+    librosa.display.specshow(librosa.power_to_db(S,
+                             ref=np.max),
+                             y_axis='mel',
+                             fmax=8000,
+                             x_axis='time')
+    plt.colorbar(format='%+2.0f dB')
+    plt.title('{} Mel spectrogram'.format(outname))
+    plt.tight_layout()
+    plt.savefig(outfile)
+    return
 
 def griffin_lim(spectrogram):
     '''Applies Griffin-Lim's raw.'''

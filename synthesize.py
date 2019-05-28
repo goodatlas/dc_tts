@@ -57,12 +57,13 @@ def synthesize(filename, outdir):
         Z = sess.run(g.Z, {g.Y: Y})
 
         # Generate wav files
-        if not os.path.exists(hp.sampledir):
-            os.makedirs(hp.sampledir)
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
         for i, mag in enumerate(Z):
             print("Working on file", i+1)
             wav = spectrogram2wav(mag)
-            write(hp.sampledir + "/{}.wav".format(i+1), hp.sr, wav)
+            write(outdir + "/{}.wav".format(i+1), hp.sr, wav)
+            render_spectrogram(outdir + "/{}.wav".format(i+1), "{}.wav".format(i+1), outdir + "/{}.png".format(i+1))
 
 if __name__ == '__main__':
     # argument: 1 or 2. 1 for Text2mel, 2 for SSRN.
