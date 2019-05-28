@@ -31,14 +31,16 @@ def synthesize(filename, outdir):
         # Restore parameters
         var_list = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'Text2Mel')
         saver1 = tf.train.Saver(var_list=var_list)
-        saver1.restore(sess, tf.train.latest_checkpoint(hp.logdir + "-1"))
-        print("Text2Mel Restored!")
+        model1 = tf.train.latest_checkpoint(hp.logdir + "-1")
+        saver1.restore(sess, model1)
+        print("Text2Mel Restored from {}".format(model1))
 
         var_list = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'SSRN') + \
                    tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, 'gs')
         saver2 = tf.train.Saver(var_list=var_list)
-        saver2.restore(sess, tf.train.latest_checkpoint(hp.logdir + "-2"))
-        print("SSRN Restored!")
+        model2 = tf.train.latest_checkpoint(hp.logdir + "-2")
+        saver2.restore(sess, model2)
+        print("SSRN Restored from {}".format(model2))
 
         # Feed Forward
         ## mel
