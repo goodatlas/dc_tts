@@ -6,6 +6,7 @@ https://www.github.com/kyubyong/dc_tts
 
 import numpy as np
 import librosa
+import librosa.display
 import os, copy
 import matplotlib
 matplotlib.use('pdf')
