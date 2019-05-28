@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
-#/usr/bin/python2
 '''
 By kyubyong park. kbpark.linguist@gmail.com. 
 https://www.github.com/kyubyong/dc_tts
 '''
 
-from __future__ import print_function
-
 from hyperparams import Hyperparams as hp
 import numpy as np
 import tensorflow as tf
 from utils import *
-import codecs
+# import codecs
 import re
 import os
 import unicodedata
@@ -43,7 +39,7 @@ def load_data(mode="train"):
             # Parse
             fpaths, text_lengths, texts = [], [], []
             transcript = os.path.join(hp.data, 'transcript.csv')
-            lines = codecs.open(transcript, 'r', 'utf-8').readlines()
+            lines = open(transcript, 'r').readlines()
             for line in lines:
                 fname, _, text = line.strip().split("|")
 
@@ -54,13 +50,13 @@ def load_data(mode="train"):
                 text = [char2idx[char] for char in text]
                 text_lengths.append(len(text))
                 texts.append(np.array(text, np.int32).tostring())
-
+            # fpath is .../LJSpeechx_x/wavs/file.wav
             return fpaths, text_lengths, texts
         else: # nick or kate
             # Parse
             fpaths, text_lengths, texts = [], [], []
             transcript = os.path.join(hp.data, 'transcript.csv')
-            lines = codecs.open(transcript, 'r', 'utf-8').readlines()
+            lines = open(transcript, 'r').readlines()
             for line in lines:
                 fname, _, text, is_inside_quotes, duration = line.strip().split("|")
                 duration = float(duration)
@@ -78,7 +74,7 @@ def load_data(mode="train"):
 
     else: # synthesize on unseen test text.
         # Parse
-        lines = codecs.open(hp.test_data, 'r', 'utf-8').readlines()[1:]
+        lines = open(hp.test_data, 'r').readlines()[1:]
         sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines] # text normalization, E: EOS
         texts = np.zeros((len(sents), hp.max_N), np.int32)
         for i, sent in enumerate(sents):
@@ -89,6 +85,7 @@ def get_batch():
     """Loads training data and put them in queues"""
     with tf.device('/cpu:0'):
         # Load data
+        # LJS fpath is .../LJSpeechx_x/wavs/file.wav
         fpaths, text_lengths, texts = load_data() # list
         maxlen, minlen = max(text_lengths), min(text_lengths)
 
@@ -104,9 +101,15 @@ def get_batch():
         if hp.prepro:
             def _load_spectrograms(fpath):
                 fname = os.path.basename(fpath)
-                mel = "mels/{}".format(fname.replace("wav", "npy"))
-                mag = "mags/{}".format(fname.replace("wav", "npy"))
-                return fname, np.load(mel), np.load(mag)
+                try:
+                    melp = os.path.join(hp.data, "mels", "{}".format(fname.replace("wav", "npy")))
+                    magp = os.path.join(hp.data, "mags", "{}".format(fname.replace("wav", "npy")))
+                except TypeError:
+                    melp = os.path.join(hp.data, "mels", "{}".format(fname.decode("utf-8").replace("wav", "npy")))
+                    magp = os.path.join(hp.data, "mags", "{}".format(fname.decode("utf-8").replace("wav", "npy")))
+                mel = np.load(melp)
+                mag = np.load(magp)
+                return fname, mel, mag
 
             fname, mel, mag = tf.py_func(_load_spectrograms, [fpath], [tf.string, tf.float32, tf.float32])
         else:

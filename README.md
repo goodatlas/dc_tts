@@ -1,62 +1,57 @@
 # A TensorFlow Implementation of DC-TTS: yet another text-to-speech model
 
-I implement yet another text-to-speech model, dc-tts, introduced in [Efficiently Trainable Text-to-Speech System Based on Deep Convolutional Networks with Guided Attention](https://arxiv.org/abs/1710.08969). My goal, however, is not just replicating the paper. Rather, I'd like to gain insights about various sound projects.
+fork of kyubong's [TensorFlow Implementation of DC-TTS](https://github.com/Kyubyong/dc_tts)
+
+from [Efficiently Trainable Text-to-Speech System Based on Deep Convolutional Networks with Guided Attention](https://arxiv.org/abs/1710.08969).
 
 ## Requirements
   * NumPy >= 1.11.1
-  * TensorFlow >= 1.3 (Note that the API of `tf.contrib.layers.layer_norm` has changed since 1.3)
+  * TensorFlow >= 1.12.0
   * librosa
   * tqdm
   * matplotlib
   * scipy
 
+## Changes from Kyubong
+
+- data loading for python3 (remove `codecs` and other fixes as seen in issue #11)
+- absolute paths to data (allow preprocessed files to be written to; read from specified absolute path)
+- `argparse` for specifying task number and GPU
+
+## (Planned) Experiments
+
+1. validate code with LJSpeech
+2. validate Korean with Kyubong's KSS data
+3. test jamo2mel Korean with Kyubong's KSS data + `jamotools`
+
 ## Data
 
-<img src="https://image.shutterstock.com/z/stock-vector-korean-alphabet-korean-hangul-pattern-693680611.jpg" height="200" align="right">
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kate_Winslet_March_18%2C_2014_%28headshot%29.jpg/890px-Kate_Winslet_March_18%2C_2014_%28headshot%29.jpg" height="200" align="right">
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Nick_Offerman_at_UMBC_%28cropped%29.jpg/440px-Nick_Offerman_at_UMBC_%28cropped%29.jpg" height="200" align="right">
-<img src="https://image.shutterstock.com/z/stock-vector-lj-letters-four-colors-in-abstract-background-logo-design-identity-in-circle-alphabet-letter-418687846.jpg" height="200" align="right">
+### LJSpeech
 
-I train English models and an Korean model on four different speech datasets. <p> 1. [LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/) <br/> 2. [Nick Offerman's Audiobooks](https://www.audible.com.au/search?searchNarrator=Nick+Offerman) <br/> 3. [Kate Winslet's Audiobook](https://www.audible.com.au/pd/Classics/Therese-Raquin-Audiobook/B00FF0SLW4/ref=a_search_c4_1_3_srTtl?qid=1516854754&sr=1-3) <br/> 4. [KSS Dataset](https://kaggle.com/bryanpark/korean-single-speaker-speech-dataset)
-
-LJ Speech Dataset is recently widely used as a benchmark dataset in the TTS task because it is publicly available, and it has 24 hours of reasonable quality samples.
-Nick's and Kate's audiobooks are additionally used to see if the model can learn even with less data, variable speech samples. They are 18 hours and 5 hours long, respectively. Finally, KSS Dataset is a Korean single speaker speech dataset that lasts more than 12 hours.
-
+1. download [LJ Speech Dataset 1.1](https://keithito.com/LJ-Speech-Dataset/)
+2. rename `metadata.csv` to `transcript.csv` (*will update later...?*)
+3. add absolute path to corpus do `hyperparams.py` as `data=<path>`
 
 ## Training
-  * STEP 0. Download [LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/) or prepare your own data.
-  * STEP 1. Adjust hyper parameters in `hyperparams.py`. (If you want to do preprocessing, set prepro True`.
-  * STEP 2. Run `python train.py 1` for training Text2Mel. (If you set prepro True, run python prepro.py first)
-  * STEP 3. Run `python train.py 2` for training SSRN.
 
-You can do STEP 2 and 3 at the same time, if you have more than one gpu card.
+1. check corpus path in `hyperparams.py`
+2. run `python(3.6) prepo.py` to create `mel` and `mag` subdirectories (this speeds up training a lot)
+3. run `python(3.6) train.py -n 1` to train text2mel. use `-g` flag to specify GPU id.
+4. run `python(3.6) train.py -n 2` to train SSRN (mel upscaling). use `-g` flag to specify GPU id.
+5. note: both training can be run together using separate GPUs
 
-## Training Curves
+## Monitoring
 
-<img src="fig/training_curves.png">
+`tensorboard` can be used to monitor training by specifying the log directory (for LJS, `LJ01-1` and `LJ01-2`), e.g.:
 
-## Attention Plot
-<img src="fig/attention.gif">
+`tensorboard --logdir=/home/derek/PythonProjects/dc_tts/logs/LJ01-1 --port=9999`
 
-## Sample Synthesis
-I generate speech samples based on [Harvard Sentences](http://www.cs.columbia.edu/~hgs/audio/harvard.html) as the original paper does. It is already included in the repo.
+## Synthesis
 
-  * Run `synthesize.py` and check the files in `samples`.
+1. specify sentences to synthesize in `hyperparams.py` (`harvard_sentences.txt` by default)
+2. run `python(3.6) synthesize.py` and check the files in `samples`.
 
-## Generated Samples
-
-| Dataset       | Samples |
-| :----- |:-------------|
-| LJ      | [50k](https://soundcloud.com/kyubyong-park/sets/dc_tts) [200k](https://soundcloud.com/kyubyong-park/sets/dc_tts_lj_200k) [310k](https://soundcloud.com/kyubyong-park/sets/dc_tts_lj_310k) [800k](https://soundcloud.com/kyubyong-park/sets/dc_tts_lj_800k)|
-| Nick      | [40k](https://soundcloud.com/kyubyong-park/sets/dc_tts_nick_40k) [170k](https://soundcloud.com/kyubyong-park/sets/dc_tts_nick_170k) [300k](https://soundcloud.com/kyubyong-park/sets/dc_tts_nick_300k) [800k](https://soundcloud.com/kyubyong-park/sets/dc_tts_nick_800k)|
-| Kate| [40k](https://soundcloud.com/kyubyong-park/sets/dc_tts_kate_40k) [160k](https://soundcloud.com/kyubyong-park/sets/dc_tts_kate_160k) [300k](https://soundcloud.com/kyubyong-park/sets/dc_tts_kate_300k) [800k](https://soundcloud.com/kyubyong-park/sets/dc_tts_kate_800k) |
-| KSS| [400k](https://soundcloud.com/kyubyong-park/sets/dc_tts_ko_400k) |
-
-## Pretrained Model for LJ
-
-Download [this](https://www.dropbox.com/s/1oyipstjxh2n5wo/LJ_logdir.tar?dl=0).
-
-## Notes
+## (from Kyubong master) Notes
 
   * The paper didn't mention normalization, but without normalization I couldn't get it to work. So I added layer normalization.
   * The paper fixed the learning rate to 0.001, but it didn't work for me. So I decayed it.

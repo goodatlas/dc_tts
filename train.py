@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
-# /usr/bin/python2
 '''
-By kyubyong park. kbpark.linguist@gmail.com. 
+By kyubyong park. kbpark.linguist@gmail.com.
 https://www.github.com/kyubyong/dc_tts
 '''
 
-from __future__ import print_function
+# from __future__ import print_function
 
 from tqdm import tqdm
-
+import argparse
+import os
 from data_load import get_batch, load_vocab
 from hyperparams import Hyperparams as hp
 from modules import *
@@ -45,7 +44,7 @@ class Graph:
             self.mels = tf.placeholder(tf.float32, shape=(None, None, hp.n_mels))
             self.prev_max_attentions = tf.placeholder(tf.int32, shape=(None,))
 
-        if num==1 or (not training):
+        if num == 1 or (not training):
             with tf.variable_scope("Text2Mel"):
                 # Get S or decoder inputs. (B, T//r, n_mels)
                 self.S = tf.concat((tf.zeros_like(self.mels[:, :1, :]), self.mels[:, :-1, :]), 1)
@@ -136,11 +135,20 @@ class Graph:
 
 if __name__ == '__main__':
     # argument: 1 or 2. 1 for Text2mel, 2 for SSRN.
-    num = int(sys.argv[1])
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('-n', '--num',  dest='num',  type=int, default=1, help='1 for Text2Mel (default); 2 for SSRN')
+    # parser.add_argument('-m', '--mode', dest='mode', type=str, default='train', help='Either default "train" or "synthesize".')
+    parser.add_argument('-g', '--gpu',  dest='gpu', type=int, default=0, help='specify GPU')
+    args = parser.parse_args()
+    # restrict GPU usage here, if using multi-gpu
+    if args.gpu >= 0:
+        print("restricting GPU usage to gpu/", args.gpu, "\n")
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
 
-    g = Graph(num=num); print("Training Graph loaded")
+    g = Graph(num=args.num)
+    print("Training Graph loaded")
 
-    logdir = hp.logdir + "-" + str(num)
+    logdir = hp.logdir + "-" + str(args.num)
     sv = tf.train.Supervisor(logdir=logdir, save_model_secs=0, global_step=g.global_step)
     with sv.managed_session() as sess:
         while 1:
@@ -151,7 +159,7 @@ if __name__ == '__main__':
                 if gs % 1000 == 0:
                     sv.saver.save(sess, logdir + '/model_gs_{}'.format(str(gs // 1000).zfill(3) + "k"))
 
-                    if num==1:
+                    if args.num == 1:
                         # plot alignment
                         alignments = sess.run(g.alignments)
                         plot_alignment(alignments[0], str(gs // 1000).zfill(3) + "k", logdir)
