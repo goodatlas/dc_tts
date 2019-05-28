@@ -29,11 +29,11 @@ fork maintained by derek@atlaslabs.ai
 
 text2mel: ~50K steps; SSRN ~15K steps
 
-<img src="img/05A.png" width="200"/>
+<img src="img/05A.png" width="500"/>
 
 text2mel: ~70K steps; SSRN ~20K steps
 
-<img src="img/05B.png" width="200"/>
+<img src="img/05B.png" width="500"/>
 
 ## Data
 
