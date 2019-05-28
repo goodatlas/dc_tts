@@ -23,11 +23,17 @@ fork maintained by derek@atlaslabs.ai
 - `argparse` for specifying task number and GPU (`train.py` and `synthesize.py`)
 - allow custom sentences, output directory when generating, and output spectrograms as images
 
-## (Planned) Experiments
+## Example
 
-1. validate code with LJSpeech
-2. validate Korean with Kyubong's KSS data
-3. test jamo2mel Korean with Kyubong's KSS data + `jamotools`
+`rice is often served in round bowls`
+
+text2mel: ~50K steps; SSRN ~15K steps
+
+<img src="img/05A.png">
+
+text2mel: ~70K steps; SSRN ~20K steps
+
+<img src="img/05B.png">
 
 ## Data
 
