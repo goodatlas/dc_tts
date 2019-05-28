@@ -27,9 +27,9 @@ def text_normalize(text):
     return text
 
 def load_data(mode="train"):
-    '''Loads data
+    '''Loads training data
       Args:
-          mode: "train" or "synthesize".
+          mode: "train" or "synthesize" (todo: remove "synthesize")
     '''
     # Load vocabulary
     char2idx, idx2char = load_vocab()
@@ -80,6 +80,17 @@ def load_data(mode="train"):
         for i, sent in enumerate(sents):
             texts[i, :len(sent)] = [char2idx[char] for char in sent]
         return texts
+
+def load_new_data(filename):
+    # Load vocabulary
+    char2idx, idx2char = load_vocab()
+    # Parse
+    lines = open(filename, 'r').readlines()[1:]
+    sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines] # text normalization, E: EOS
+    texts = np.zeros((len(sents), hp.max_N), np.int32)
+    for i, sent in enumerate(sents):
+        texts[i, :len(sent)] = [char2idx[char] for char in sent]
+    return texts
 
 def get_batch():
     """Loads training data and put them in queues"""
