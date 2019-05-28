@@ -62,8 +62,8 @@ def synthesize(filename, outdir):
         for i, mag in enumerate(Z):
             print("Working on file", i+1)
             wav = spectrogram2wav(mag)
-            write(outdir + "/{}.wav".format(i+1), hp.sr, wav)
-            render_spectrogram(outdir + "/{}.wav".format(i+1), "{}.wav".format(i+1), outdir + "/{}.png".format(i+1))
+            write(outdir + "/{:02d}.wav".format(i+1), hp.sr, wav)
+            render_spectrogram(outdir + "/{:02d}.wav".format(i+1), "{:02d}.wav".format(i+1), outdir + "/{:02d}.png".format(i+1))
 
 if __name__ == '__main__':
     # argument: 1 or 2. 1 for Text2mel, 2 for SSRN.
