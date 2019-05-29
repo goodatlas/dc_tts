@@ -52,6 +52,23 @@ def load_data(mode="train"):
                 texts.append(np.array(text, np.int32).tostring())
             # fpath is .../LJSpeechx_x/wavs/file.wav
             return fpaths, text_lengths, texts
+        elif 'korean' in hp.data: # korean-single-speaker-speech-dataset
+            # Parse
+            fpaths, text_lengths, texts = [], [], []
+            transcript = os.path.join(hp.data, 'transcript.csv')
+            lines = open(transcript, 'r').readlines()
+            for line in lines:
+                fname, _, text, duration = line.strip().split("|")
+                duration = float(duration)
+                if duration > 10. : continue
+
+                fpath = os.path.join(hp.data, fname)
+                fpaths.append(fpath)
+
+                text += "E"  # E: EOS
+                text = [char2idx[char] for char in text.split(' ')]
+                text_lengths.append(len(text))
+                texts.append(np.array(text, np.int32).tostring())
         else: # nick or kate
             # Parse
             fpaths, text_lengths, texts = [], [], []
@@ -74,11 +91,18 @@ def load_data(mode="train"):
 
     else: # synthesize on unseen test text.
         # Parse
-        lines = open(hp.test_data, 'r').readlines()[1:]
-        sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines] # text normalization, E: EOS
-        texts = np.zeros((len(sents), hp.max_N), np.int32)
-        for i, sent in enumerate(sents):
-            texts[i, :len(sent)] = [char2idx[char] for char in sent]
+        if 'korean' in hp.test_data:
+            lines = open(hp.test_data, 'r').readlines()[1:]
+            sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines] # text normalization, E: EOS
+            texts = np.zeros((len(sents), hp.max_N), np.int32)
+            for i, sent in enumerate(sents):
+                texts[i, :len(sent)] = [char2idx[char] for char in sent.split(' ')]
+        else:
+            lines = open(hp.test_data, 'r').readlines()[1:]
+            sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines] # text normalization, E: EOS
+            texts = np.zeros((len(sents), hp.max_N), np.int32)
+            for i, sent in enumerate(sents):
+                texts[i, :len(sent)] = [char2idx[char] for char in sent]
         return texts
 
 def load_new_data(filename):

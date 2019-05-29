@@ -31,19 +31,22 @@ class Hyperparams:
     attention_win_size = 3
 
     # data
-    data = "/home/derek/PythonProjects/datasets/LJSpeech-1.1"
-    # data = "/home/derek/PycharmProjects/atlas/dc_tts/data/LJSpeech-1.1"
-    # data = "/data/private/voice/kate"
-    test_data = 'harvard_sentences.txt'
+    # data = "/home/derek/PythonProjects/datasets/LJSpeech-1.1"
+    data = "/home/derek/PythonProjects/datasets/korean-single-speaker-speech-dataset/korean-single-speaker"
+
+    # test_data = 'harvard_sentences.txt'
     # test_data = 'movie_quotes.txt'
-    vocab = "PE abcdefghijklmnopqrstuvwxyz'.?"  # P: Padding, E: EOS.
+
+    # vocab = "PE abcdefghijklmnopqrstuvwxyz'.?"  # P: Padding, E: EOS.
+    vocab = "PEㅣㅢㅡㅠㅟㅞㅝㅜㅛㅚㅙㅘㅗㅖㅕㅔㅓㅒㅑㅐㅏㅎㅍㅌㅋㅊㅉㅈㅇㅆㅅㅄㅃㅂㅁㅀㄾㄼㄻㄺㄹㄸㄷㄶㄵㄴㄳㄲㄱ▁ⅇ?.,!"
+
     max_N = 180  # Maximum number of characters.
     max_T = 210  # Maximum number of mel frames.
 
     # training scheme
     lr = 0.001  # Initial learning rate.
-    logdir = "logs/LJ01"
-    sampledir = 'samples/harvard'
+    logdir = "logs/KSS01"
+    sampledir = 'samples/korean'
     B = 16  # batch size
     num_iterations = 1000000
 
