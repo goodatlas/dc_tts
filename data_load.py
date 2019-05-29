@@ -66,7 +66,7 @@ def load_data(mode="train"):
                 duration = float(duration)
                 if duration > 10. : continue
 
-                fpath = os.path.join(hp.data, "wavs", fname)
+                fpath = os.path.join(hp.data, "wavs", fname.split('/')[-1])
                 fpaths.append(fpath)
 
                 text += " E"  # E: EOS
