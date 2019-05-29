@@ -62,13 +62,14 @@ def load_data(mode="train"):
                 duration = float(duration)
                 if duration > 10. : continue
 
-                fpath = os.path.join(hp.data, fname)
+                fpath = os.path.join(hp.data, "wavs", fname + ".wav")
                 fpaths.append(fpath)
 
                 text += "E"  # E: EOS
                 text = [char2idx[char] for char in text.split(' ')]
                 text_lengths.append(len(text))
                 texts.append(np.array(text, np.int32).tostring())
+            return fpaths, text_lengths, texts
         else: # nick or kate
             # Parse
             fpaths, text_lengths, texts = [], [], []
