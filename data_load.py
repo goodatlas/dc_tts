@@ -26,6 +26,10 @@ def text_normalize(text):
     text = re.sub("[ ]+", " ", text)
     return text
 
+def kor_normalize(text):
+    # todo
+    return text
+
 def load_data(mode="train"):
     '''Loads training data
       Args:
@@ -65,7 +69,7 @@ def load_data(mode="train"):
                 fpath = os.path.join(hp.data, "wavs", fname + ".wav")
                 fpaths.append(fpath)
 
-                text += "E"  # E: EOS
+                text += " E"  # E: EOS
                 text = [char2idx[char] for char in text.split(' ')]
                 text_lengths.append(len(text))
                 texts.append(np.array(text, np.int32).tostring())
