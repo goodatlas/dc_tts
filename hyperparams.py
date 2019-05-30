@@ -36,6 +36,7 @@ class Hyperparams:
 
     # test_data = 'harvard_sentences.txt'
     # test_data = 'movie_quotes.txt'
+    test_data = "korean_sents.txt"
 
     # vocab = "PE abcdefghijklmnopqrstuvwxyz'.?"  # P: Padding, E: EOS.
     vocab = "PEㅣㅢㅡㅠㅟㅞㅝㅜㅛㅚㅙㅘㅗㅖㅕㅔㅓㅒㅑㅐㅏㅎㅍㅌㅋㅊㅉㅈㅇㅆㅅㅄㅃㅂㅁㅀㄾㄼㄻㄺㄹㄸㄷㄶㄵㄴㄳㄲㄱ▁ⅇ?.,!"
