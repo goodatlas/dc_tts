@@ -114,11 +114,11 @@ def load_new_data(filename):
     # Load vocabulary
     char2idx, idx2char = load_vocab()
     # Parse
-    lines = open(filename, 'r').readlines()[1:]
-    sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines] # text normalization, E: EOS
+    lines = open(hp.test_data, 'r').readlines()[1:]
+    sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines]  # text normalization, E: EOS
     texts = np.zeros((len(sents), hp.max_N), np.int32)
     for i, sent in enumerate(sents):
-        texts[i, :len(sent)] = [char2idx[char] for char in sent]
+        texts[i, :len(sent)] = [char2idx[char] for char in sent.split(' ')]
     return texts
 
 def get_batch():
