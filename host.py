@@ -124,6 +124,6 @@ if __name__ == '__main__':
     # write_wav('tmp.wav', hp.sr, test)
     # playsound('tmp.wav')
 
-    app.run(host=args.app_url, port=args.app_port, debug=True)
+    app.run(host=args.app_url, port=args.app_port, use_reloader=False, debug=True)
 
 
