@@ -101,7 +101,7 @@ def load_data(mode="train"):
             sents = [kor_normalize(line.split(" ", 1)[-1]).strip() + " E" for line in lines] # text normalization, E: EOS
             texts = np.zeros((len(sents), hp.max_N), np.int32)
             for i, sent in enumerate(sents):
-                texts[i, :len(sent)] = [char2idx[char] for char in sent.split(' ')]
+                texts[i, :len(sent.split(' '))] = [char2idx[char] for char in sent.split(' ')]
         else:
             lines = open(hp.test_data, 'r').readlines()[1:]
             sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines] # text normalization, E: EOS
@@ -119,7 +119,7 @@ def load_new_data(filename):
         sents = [kor_normalize(line.split(" ", 1)[-1]).strip() + " E" for line in lines]  # text normalization, E: EOS
         texts = np.zeros((len(sents), hp.max_N), np.int32)
         for i, sent in enumerate(sents):
-            texts[i, :len(sent)] = [char2idx[char] for char in sent.split(' ')]
+            texts[i, :len(sent.split(' '))] = [char2idx[char] for char in sent.split(' ')]
     else:
         lines = open(hp.test_data, 'r').readlines()[1:]
         sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines]  # text normalization, E: EOS
