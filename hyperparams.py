@@ -42,7 +42,7 @@ class Hyperparams:
     vocab = "PEㅣㅢㅡㅠㅟㅞㅝㅜㅛㅚㅙㅘㅗㅖㅕㅔㅓㅒㅑㅐㅏㅎㅍㅌㅋㅊㅉㅈㅇㅆㅅㅄㅃㅂㅁㅀㄾㄼㄻㄺㄹㄸㄷㄶㄵㄴㄳㄲㄱ▁ⅇ?.,!"
 
     max_N = 180  # Maximum number of characters.
-    max_T = 210  # Maximum number of mel frames.
+    max_T = 240  # Maximum number of mel frames.
 
     # training scheme
     lr = 0.001  # Initial learning rate.
