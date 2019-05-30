@@ -106,7 +106,7 @@ if __name__ == '__main__':
     parser.add_argument('-g', '--gpu', dest='gpu', type=int, default=-1, help='specify GPU; default none (-1)')
     parser.add_argument('-u', '--url', dest='app_url', type=str, default='0.0.0.0',
                         help='host url')
-    parser.add_argument('-r', '--port', dest='app_port', type=int, default=5000,
+    parser.add_argument('-p', '--port', dest='app_port', type=int, default=5000,
                         help='host port')
     args = parser.parse_args()
 
